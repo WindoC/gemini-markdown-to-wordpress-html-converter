@@ -1,0 +1,5 @@
+{
+  "name": "Markdown to WordPress HTML Converter",
+  "description": "A tool that uses the Gemini API to convert AI-generated Markdown into clean, semantic HTML suitable for a WordPress blog post, without any extraneous tags or styles.",
+  "requestFramePermissions": []
+}
