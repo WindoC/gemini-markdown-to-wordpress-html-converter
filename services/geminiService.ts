@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = process.env.API_KEY;
@@ -32,12 +31,20 @@ export async function convertToHtmlStream(
   // `;
 
   const systemInstruction = `
-    convert markdown to wordpress post html.
-    Ensure the output is well-formed HTML.
-    The output will use to paste into wordpress post code editor mode direcly. must including the tag <!-- wp:xxx --> ... <!-- /wp:xxx -->
-    **DO NOT** include <html>, <head>, or <body> tags.
-    **DO NOT** include any CSS, <style> tags, or inline "style" attributes.
-    **DO NOT** wrap the final output in a markdown code block (e.g., \`\`\`html ... \`\`\`). The output must be the raw HTML itself.
+convert markdown to wordpress post html.
+Ensure the output is well-formed HTML.
+The output will use to paste into wordpress post code editor mode direcly. must including the tag <!-- wp:xxx --> ... <!-- /wp:xxx -->
+
+RULE FOR MERMAID DIAGRAMS:
+If you find a markdown code block that starts with \`\`\`mermaid\`, you must convert it to the following HTML structure, placing the original mermaid code inside the <pre> tag:
+<!-- wp:merpress/mermaidjs -->
+<div class="wp-block-merpress-mermaidjs diagram-source-mermaid"><pre class="mermaid">[THE MERMAID CODE GOES HERE]</pre></div>
+<!-- /wp:merpress/mermaidjs -->
+
+**GENERAL RULES:**
+**DO NOT** include <html>, <head>, or <body> tags.
+**DO NOT** include any CSS, <style> tags, or inline "style" attributes.
+**DO NOT** wrap the final output in a markdown code block (e.g., \`\`\`html ... \`\`\`). The output must be the raw HTML itself.
   `;
 
   try {
