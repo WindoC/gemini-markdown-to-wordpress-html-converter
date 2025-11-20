@@ -12,24 +12,6 @@ export async function convertToHtmlStream(
   markdown: string,
   onStreamUpdate: (chunk: string) => void
 ): Promise<void> {
-  // const prompt = `
-  //   You are an expert web developer specializing in creating clean, semantic HTML for WordPress blogs. Your task is to convert the following Markdown text into HTML.
-
-  //   **CRITICAL RULES:**
-  //   1.  **DO NOT** include \`<html>\`, \`<head>\`, or \`<body>\` tags.
-  //   2.  **DO NOT** include any CSS, \`<style>\` tags, or inline \`style\` attributes.
-  //   3.  The output must be **ONLY** the HTML content that would go inside the WordPress post editor's 'Text' or 'Code' view.
-  //   4.  Ensure all Markdown syntax (headings, paragraphs, lists, links, images, code blocks, blockquotes, bold, italic, etc.) is correctly converted to its corresponding semantic HTML tag.
-  //   5.  For code blocks, use \`<pre><code class="language-...">...</code></pre>\` and correctly escape any HTML entities within the code itself. Infer the language if possible.
-  //   6.  Ensure the output is well-formed HTML.
-  //   7.  **DO NOT** wrap the final output in a markdown code block (e.g., \`\`\`html ... \`\`\`). The output must be the raw HTML itself.
-
-  //   Here is the Markdown content to convert:
-  //   ---
-  //   ${markdown}
-  //   ---
-  // `;
-
   const systemInstruction = `
 convert markdown to wordpress post html.
 Ensure the output is well-formed HTML.
@@ -41,10 +23,12 @@ If you find a markdown code block that starts with \`\`\`mermaid\`, you must con
 <div class="wp-block-merpress-mermaidjs diagram-source-mermaid"><pre class="mermaid">[THE MERMAID CODE GOES HERE]</pre></div>
 <!-- /wp:merpress/mermaidjs -->
 
-**GENERAL RULES:**
-**DO NOT** include <html>, <head>, or <body> tags.
-**DO NOT** include any CSS, <style> tags, or inline "style" attributes.
-**DO NOT** wrap the final output in a markdown code block (e.g., \`\`\`html ... \`\`\`). The output must be the raw HTML itself.
+GENERAL RULES:
+Remote unnecessary class in html tags.
+Beautify the reference links presentation.
+DO NOT include <html>, <head>, or <body> tags.
+DO NOT include any CSS, <style> tags, or inline "style" attributes.
+DO NOT wrap the final output in a markdown code block (e.g., \`\`\`html ... \`\`\`). The output must be the raw HTML itself.
   `;
 
   try {
