@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { MagicWandIcon } from './icons/MagicWandIcon';
 
 interface InputPanelProps {
@@ -10,6 +10,16 @@ interface InputPanelProps {
 }
 
 const InputPanel: React.FC<InputPanelProps> = ({ value, onChange, onConvert, isLoading }) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    // Auto-scroll to bottom when value changes, but only if user is not currently focusing/typing
+    // to avoid jumping the view while editing the top of a long document.
+    if (textareaRef.current && document.activeElement !== textareaRef.current) {
+      textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+    }
+  }, [value]);
+
   return (
     <div className="flex flex-col bg-slate-800/50 rounded-lg shadow-xl border border-slate-700 h-[60vh] md:h-auto">
       <div className="p-4 border-b border-slate-700 flex justify-between items-center">
@@ -39,6 +49,7 @@ const InputPanel: React.FC<InputPanelProps> = ({ value, onChange, onConvert, isL
       </div>
       <div className="flex-grow p-1">
         <textarea
+          ref={textareaRef}
           id="markdown-input"
           value={value}
           onChange={onChange}

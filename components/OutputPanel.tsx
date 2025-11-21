@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ClipboardIcon } from './icons/ClipboardIcon';
 
 interface OutputPanelProps {
@@ -9,6 +9,7 @@ interface OutputPanelProps {
 
 const OutputPanel: React.FC<OutputPanelProps> = ({ html, isLoading }) => {
   const [copyText, setCopyText] = useState('Copy HTML');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (copyText === 'Copied!') {
@@ -16,6 +17,13 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ html, isLoading }) => {
       return () => clearTimeout(timer);
     }
   }, [copyText]);
+
+  useEffect(() => {
+    // Always scroll to bottom when content updates (e.g. streaming)
+    if (textareaRef.current) {
+      textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+    }
+  }, [html, isLoading]);
 
   const handleCopy = () => {
     if (html) {
@@ -39,9 +47,11 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ html, isLoading }) => {
       </div>
       <div className="flex-grow p-1">
         <textarea
-          id="markdown-input"
+          ref={textareaRef}
+          id="html-output"
           value={ html || ( isLoading ? "Generating HTML..." : "" )}
           placeholder="Your generated HTML will appear here."
+          readOnly
           className="w-full h-full bg-slate-900 rounded-b-md p-4 text-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-none font-mono text-sm"
         />
       </div>
